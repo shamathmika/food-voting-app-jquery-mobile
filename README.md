@@ -3,7 +3,6 @@
 A cozy, Studio-Ghibli-inspired interactive food voting web app.  
 Built with **HTML**, **CSS**, **jQuery Mobile**, and a custom **slide-up modal**.  
 Swipe, click arrows, or use keyboard keys to vote on foods, then view your results in a whimsical **storybook layout**.
-
 ---
 
 ## Features
@@ -108,3 +107,5 @@ To add a new food:
   ```
 - The app automatically picks it up.
 ---
+## Demo:
+https://github.com/user-attachments/assets/b7c52ab5-1b17-42ab-a5c5-500c901473da
