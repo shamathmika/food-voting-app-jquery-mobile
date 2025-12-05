@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <!-- jQuery Mobile CSS -->
+  <link rel="stylesheet"
+        href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+  <!-- jQuery Mobile JS -->
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+  <title>Food Voting App</title>
+
+  <style>
+    :root {
+      --ghibli-cream: #f7f2e8;
+      --ghibli-paper: #fff9ec;
+      --ghibli-shadow: rgba(0,0,0,0.18);
+      --ghibli-green: #7ea87c;
+      --ghibli-red: #c96f63;
+      --ghibli-brown: #8d6f55;
+      --ghibli-text: #5a4a3c;
+    }
+
+    body, h1, h2, h3, p, div, span, a {
+      font-family: "Quicksand", sans-serif !important;
+      color: var(--ghibli-text);
+      text-decoration: none !important;
+    }
+
+    body {
+      background: var(--ghibli-cream);
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background-image:url("https://i.imgur.com/2R8qQ7z.png");
+      opacity:0.25;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .ui-header {
+      background: var(--ghibli-paper) !important;
+      border:none !important;
+      box-shadow:none !important;
+    }
+
+    .ui-title {
+      font-size:26px !important;
+      font-weight:700 !important;
+      color:var(--ghibli-brown) !important;
+    }
+
+    /* ------------------------------------- */
+    /* BOOK-STYLE RESULTS PAGE               */
+    /* ------------------------------------- */
+
+    .book-container {
+      display:flex;
+      width:90%;
+      max-width:950px;
+      margin:30px auto;
+      background:var(--ghibli-paper);
+      border-radius:14px;
+      box-shadow:0px 6px 20px var(--ghibli-shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .book-spine {
+      width:6px;
+      background:#d8c9ab;
+      box-shadow:inset 0px 0px 4px rgba(0,0,0,0.25);
+      position:absolute;
+      left:50%;
+      top:0;
+      bottom:0;
+      transform:translateX(-50%);
+    }
+
+    .page {
+      flex:1;
+      padding:25px 30px;
+      background:var(--ghibli-paper);
+      box-shadow:inset 0px 0px 20px rgba(0,0,0,0.08);
+    }
+
+    .page h2 {
+      text-align:center;
+      font-size:24px;
+      margin-bottom:20px;
+      color:var(--ghibli-brown);
+    }
+
+    .small-item {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 8px;
+      margin-bottom:14px;
+      border-radius:10px;
+      cursor:pointer;
+      transition:background .2s ease;
+    }
+
+    .small-item:hover {
+      background:#fff4d7;
+    }
+
+    .small-item img {
+      width:42px;
+      height:42px;
+      border-radius:8px;
+      box-shadow:0px 3px 8px rgba(0,0,0,0.15);
+      object-fit:cover;
+    }
+
+    .small-item span {
+      font-size:18px;
+      font-weight:600;
+    }
+
+    /* ------------------------------------- */
+    /* MODAL                                 */
+    /* ------------------------------------- */
+
+    #modalOverlay {
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      height:0;
+      background:rgba(0,0,0,0.45);
+      opacity:0;
+      overflow:hidden;
+      transition:opacity .3s ease, height .3s ease;
+      z-index:999;
+    }
+
+    #modalOverlay.open {
+      opacity:1;
+      height:100%;
+    }
+
+    #modalCard {
+      background:var(--ghibli-paper);
+      position:absolute;
+      bottom:-500px;
+      left:0;
+      width:100%;
+      border-radius:16px 16px 0 0;
+      padding:25px;
+      box-shadow:0px -6px 16px var(--ghibli-shadow);
+      transition:bottom .35s ease-out;
+      text-align:center;
+    }
+
+    #modalOverlay.open #modalCard {
+      bottom:0;
+    }
+
+    #modalImage {
+      width:85%;
+      max-width:420px;
+      border-radius:16px;
+      margin-bottom:15px;
+      box-shadow:0px 6px 16px var(--ghibli-shadow);
+    }
+
+    #modalName {
+      font-size:28px;
+      font-weight:700;
+    }
+
+    #modalIcon {
+      font-size:42px;
+      margin-top:8px;
+    }
+
+    #modalLore {
+      margin-top:15px;
+      font-size:18px;
+      line-height:1.4;
+      opacity:0.85;
+      padding:0 15px;
+    }
+
+    #closeModal {
+      margin-top:20px;
+      background:var(--ghibli-green);
+      color:white;
+      padding:10px 20px;
+      border-radius:12px;
+      cursor:pointer;
+      font-size:18px;
+      display:inline-block;
+    }
+
+    /* ------------------------------------- */
+    /* VOTING CARD                            */
+    /* ------------------------------------- */
+
+    .vote-card {
+      background: var(--ghibli-paper);
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0px 6px 16px var(--ghibli-shadow);
+      margin: 40px auto;
+      text-align: center;
+      max-width: 650px;
+      border: 2px solid #e6dccb;
+    }
+
+    #itemImage {
+      width: 100%;
+      max-width: 560px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      box-shadow: 0px 4px 10px var(--ghibli-shadow);
+    }
+
+    #itemText {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .arrow-area {
+      display:flex;
+      justify-content:space-between;
+      margin-top:30px;
+    }
+
+    .arrow {
+      font-size:54px;
+      cursor:pointer;
+      padding:14px 28px;
+      border-radius:12px;
+      font-weight:bold;
+      transition:transform .15s ease;
+    }
+
+    .arrow-left {
+      background:var(--ghibli-red);
+      color:white;
+    }
+
+    .arrow-right {
+      background:var(--ghibli-green);
+      color:white;
+    }
+
+    .arrow:hover { transform:scale(1.1); }
+
+    .slide-left { animation:slideLeft .35s forwards; }
+    .slide-right { animation:slideRight .35s forwards; }
+
+    @keyframes slideLeft {
+      from { opacity:1; transform:translateX(0); }
+      to { opacity:0; transform:translateX(-250px); }
+    }
+
+    @keyframes slideRight {
+      from { opacity:1; transform:translateX(0); }
+      to { opacity:0; transform:translateX(250px); }
+    }
+
+    .fade-in { animation:fadeIn .35s ease-out; }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+  </style>
+
+<script>
+/* -------------------------------------------------------------- */
+/* FOOD ITEMS + GHIBLI LORE                                       */
+/* -------------------------------------------------------------- */
+
+const foodLore = {
+  "Pizza": "A warm slice beloved across villages and cities alike.",
+  "Sushi": "Delicate flavors crafted in misty harbors by patient artisans.",
+  "Pasta": "A joyful bowl often cooked in cozy kitchens filled with laughter.",
+  "Burrito": "A traveler’s comfort, wrapped to stay warm during long journeys.",
+  "Salad": "Harvested at dawn, kissed by the cool meadow breeze.",
+  "Ice Cream": "A treat enjoyed beneath festival lanterns in summer nights.",
+  "Ramen": "A soulful bowl, best on rainy days in quiet inns.",
+  "Tacos": "Bursting with lively flavors from bustling street markets.",
+  "Pancakes": "Fluffy stacks rumored to be made by early-rising spirits.",
+  "Fries": "Crispy golden bites adored by wandering soot sprites."
+};
+
+const items = Object.keys(foodLore);
+
+/* -------------------------------------------------------------- */
+/* STATE                                                          */
+/* -------------------------------------------------------------- */
+
+let index = 0;
+let votes = JSON.parse(localStorage.getItem("votes")) || {};
+
+/* Utility: pick correct image */
+function foodImage(item) {
+  return votes[item] === "yes"
+    ? `images/${item}.png`
+    : `images/${item}-sad.png`;
+}
+
+/* -------------------------------------------------------------- */
+/* MODAL                                                          */
+/* -------------------------------------------------------------- */
+
+function showModal(item) {
+  $("#modalImage").attr("src", foodImage(item));
+  $("#modalName").text(item);
+  $("#modalIcon").text(votes[item] === "yes" ? "❤️" : "💔");
+  $("#modalLore").text(foodLore[item]);
+  $("#modalOverlay").addClass("open");
+}
+
+function closeModal() {
+  $("#modalOverlay").removeClass("open");
+}
+
+$(document).on("click", "#closeModal", closeModal);
+$(document).on("click", "#modalOverlay", e => {
+  if (e.target.id === "modalOverlay") closeModal();
+});
+
+/* -------------------------------------------------------------- */
+/* VOTING                                                         */
+/* -------------------------------------------------------------- */
+
+$(document).on("pagebeforeshow", "#homePage", () => {
+  index = 0;
+  votes = {};
+  localStorage.setItem("votes", JSON.stringify(votes));
+});
+
+function animateAndVote(type) {
+  let card = $(".vote-card");
+
+  card.addClass(type === "yes" ? "slide-right" : "slide-left");
+
+  setTimeout(() => {
+    card.removeClass("slide-right slide-left");
+    recordVote(type);
+  }, 350);
+}
+
+function loadVotePage() {
+  if (index >= items.length) {
+    $.mobile.changePage("#resultsPage");
+    displayResults();
+    return;
+  }
+
+  const item = items[index];
+  $("#itemText").text(item);
+  $("#itemImage").attr("src", `images/${item}.png`);
+  $("#counter").text((index+1) + "/10");
+
+  $(".vote-card").addClass("fade-in");
+  setTimeout(() => $(".vote-card").removeClass("fade-in"), 350);
+}
+
+function recordVote(type) {
+  votes[items[index]] = type;
+  localStorage.setItem("votes", JSON.stringify(votes));
+  index++;
+  loadVotePage();
+}
+
+/* -------------------------------------------------------------- */
+/* RESULTS BOOK PAGE                                              */
+/* -------------------------------------------------------------- */
+
+function displayResults() {
+  const liked = $("#likedCol");
+  const disliked = $("#dislikedCol");
+
+  liked.empty();
+  disliked.empty();
+
+  for (let item of items) {
+    const html = `
+      <div class="small-item" onclick="showModal('${item}')">
+        <img src="${foodImage(item)}">
+        <span>${item}</span>
+      </div>
+    `;
+
+    if (votes[item] === "yes") liked.append(html);
+    else disliked.append(html);
+  }
+}
+
+/* -------------------------------------------------------------- */
+/* INIT                                                           */
+/* -------------------------------------------------------------- */
+
+$(document).on("pagebeforeshow", "#votePage", loadVotePage);
+
+$(document).on("swipeleft", "#votePage", () => animateAndVote("no"));
+$(document).on("swiperight", "#votePage", () => animateAndVote("yes"));
+
+$(document).keydown(function(e) {
+  if ($.mobile.activePage.attr("id") !== "votePage") return;
+  if (e.key === "ArrowLeft") animateAndVote("no");
+  if (e.key === "ArrowRight") animateAndVote("yes");
+});
+</script>
+
+</head>
+<body>
+
+<!-- HOME -->
+<div data-role="page" id="homePage">
+  <div data-role="header"><h1>Food Voting</h1></div>
+  <div data-role="content" style="text-align:center; margin-top:40px;">
+    <p>Swipe, click, or use keyboard arrows</p>
+    <a href="#votePage" data-role="button"
+       style="background:var(--ghibli-green); color:white; border:none; font-weight:700; border-radius:12px;">
+      Start
+    </a>
+  </div>
+</div>
+
+<!-- VOTE -->
+<div data-role="page" id="votePage">
+  <div data-role="header"><h1>Vote</h1></div>
+
+  <div class="vote-card">
+    <h3 id="counter"></h3>
+
+    <img id="itemImage" src="images/Pizza.png">
+    <div id="itemText"></div>
+
+    <div class="arrow-area">
+      <div class="arrow arrow-left" onclick="animateAndVote('no')">&#8592;</div>
+      <div class="arrow arrow-right" onclick="animateAndVote('yes')">&#8594;</div>
+    </div>
+  </div>
+
+  <div class="tap-zone tap-left" onclick="animateAndVote('no')"></div>
+  <div class="tap-zone tap-right" onclick="animateAndVote('yes')"></div>
+</div>
+
+<!-- RESULTS -->
+<div data-role="page" id="resultsPage">
+  <div data-role="header"><h1>Results</h1></div>
+
+  <div class="book-container">
+
+    <div class="page">
+      <h2>Foods you liked</h2>
+      <div id="likedCol"></div>
+    </div>
+
+    <div class="book-spine"></div>
+
+    <div class="page">
+      <h2>Foods you disliked</h2>
+      <div id="dislikedCol"></div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center; padding:20px;">
+    <a href="#homePage" data-role="button"
+       style="background:var(--ghibli-green); border:none; color:white; font-weight:700; border-radius:12px;">
+       Restart
+    </a>
+  </div>
+</div>
+
+<!-- SLIDE-UP MODAL -->
+<div id="modalOverlay">
+  <div id="modalCard">
+    <img id="modalImage">
+    <div id="modalName"></div>
+    <div id="modalIcon"></div>
+    <p id="modalLore"></p>
+    <div id="closeModal">Close</div>
+  </div>
+</div>
+
+</body>
+</html>
