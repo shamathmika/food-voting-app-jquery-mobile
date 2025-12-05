@@ -28,6 +28,9 @@
       --ghibli-red: #c96f63;
       --ghibli-brown: #8d6f55;
       --ghibli-text: #5a4a3c;
+
+      --magic-start: #ffe9a9;
+      --magic-start-dark: #d6b86f;
     }
 
     body, h1, h2, h3, p, div, span, a {
@@ -46,7 +49,7 @@
       top:0; left:0;
       width:100%; height:100%;
       background-image:url("https://i.imgur.com/2R8qQ7z.png");
-      opacity:0.25;
+      opacity:0.22;
       pointer-events:none;
       z-index:-1;
     }
@@ -64,7 +67,71 @@
     }
 
     /* ------------------------------------- */
-    /* BOOK-STYLE RESULTS PAGE               */
+    /* HOME PAGE (Version 2 + enhanced button) */
+    /* ------------------------------------- */
+
+    #homePage .ui-content {
+      text-align:center;
+      padding:15px 20px 40px;
+    }
+
+    #homePage .home-image {
+      width:94%;
+      max-width:480px;
+      border-radius:18px;
+      display:block;
+      margin:15px auto;
+      box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    #homePage .home-title {
+      font-size:34px;
+      font-weight:700;
+      margin-top:10px;
+    }
+
+    #homePage .home-subtitle {
+      font-size:18px;
+      opacity:0.85;
+      margin-top:4px;
+      margin-bottom:25px;
+    }
+
+    /* ------------------------------------- */
+    /* BETTER ANIMATED BUTTON (MAGICAL)       */
+    /* ------------------------------------- */
+
+    .magic-btn {
+      background: linear-gradient(180deg, var(--magic-start), var(--magic-start-dark));
+      padding:14px 34px;
+      border-radius:50px;
+      color:#4d3b20 !important;
+      font-weight:700;
+      font-size:20px;
+      display:inline-block;
+      border:none;
+      box-shadow:
+        0 0 12px rgba(255,225,150,0.8),
+        0 6px 16px rgba(0,0,0,0.22);
+      animation:magicPulse 2.8s ease-in-out infinite;
+      transition:transform .2s ease;
+    }
+
+    .magic-btn:hover {
+      transform:translateY(-3px) scale(1.05);
+      box-shadow:
+        0 0 22px rgba(255,225,150,1),
+        0 10px 20px rgba(0,0,0,0.28);
+    }
+
+    @keyframes magicPulse {
+      0% { box-shadow:0 0 12px rgba(255,225,150,0.8); }
+      50% { box-shadow:0 0 28px rgba(255,240,200,1); }
+      100% { box-shadow:0 0 12px rgba(255,225,150,0.8); }
+    }
+
+    /* ------------------------------------- */
+    /* RESULTS PAGE (Version 2)              */
     /* ------------------------------------- */
 
     .book-container {
@@ -82,7 +149,7 @@
     .book-spine {
       width:6px;
       background:#d8c9ab;
-      box-shadow:inset 0px 0px 4px rgba(0,0,0,0.25);
+      box-shadow:inset 0 0 4px rgba(0,0,0,0.25);
       position:absolute;
       left:50%;
       top:0;
@@ -92,9 +159,9 @@
 
     .page {
       flex:1;
-      padding:25px 30px;
+      padding:25px;
       background:var(--ghibli-paper);
-      box-shadow:inset 0px 0px 20px rgba(0,0,0,0.08);
+      box-shadow:inset 0 0 20px rgba(0,0,0,0.08);
     }
 
     .page h2 {
@@ -108,11 +175,11 @@
       display:flex;
       align-items:center;
       gap:10px;
-      padding:8px 8px;
-      margin-bottom:14px;
+      padding:8px;
       border-radius:10px;
       cursor:pointer;
-      transition:background .2s ease;
+      margin-bottom:14px;
+      transition:background .15s ease;
     }
 
     .small-item:hover {
@@ -124,16 +191,85 @@
       height:42px;
       border-radius:8px;
       box-shadow:0px 3px 8px rgba(0,0,0,0.15);
-      object-fit:cover;
-    }
-
-    .small-item span {
-      font-size:18px;
-      font-weight:600;
     }
 
     /* ------------------------------------- */
-    /* MODAL                                 */
+    /* VOTING PAGE (Version 2 untouched)      */
+    /* ------------------------------------- */
+
+    .vote-card {
+      background:var(--ghibli-paper);
+      padding:25px;
+      border-radius:18px;
+      margin:40px auto;
+      max-width:650px;
+      border:2px solid #e6dccb;
+      text-align:center;
+      box-shadow:0px 6px 16px var(--ghibli-shadow);
+    }
+
+    #itemImage {
+      width:100%;
+      max-width:560px;
+      border-radius:14px;
+      margin-bottom:18px;
+      box-shadow:0px 4px 10px var(--ghibli-shadow);
+    }
+
+    .arrow-area {
+      display:flex;
+      justify-content:space-between;
+      margin-top:30px;
+    }
+
+    .arrow-left {
+      background:var(--ghibli-red);
+      padding:14px 28px;
+      font-size:54px;
+      border-radius:12px;
+      color:white;
+    }
+
+    .arrow-right {
+      background:var(--ghibli-green);
+      padding:14px 28px;
+      font-size:54px;
+      border-radius:12px;
+      color:white;
+    }
+
+    .slide-left { animation:slideLeft .35s forwards; }
+    .slide-right { animation:slideRight .35s forwards; }
+
+    @keyframes slideLeft {
+      from { opacity:1; transform:translateX(0);}
+      to { opacity:0; transform:translateX(-250px);}
+    }
+
+    @keyframes slideRight {
+      from { opacity:1; transform:translateX(0);}
+      to { opacity:0; transform:translateX(250px);}
+    }
+
+    .fade-in { animation:fadeIn .35s ease-out; }
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(20px);}
+      to { opacity:1; transform:translateY(0);}
+    }
+
+    .tap-zone {
+      position:absolute;
+      top:0;
+      width:50%;
+      height:100%;
+      z-index:20;
+    }
+
+    .tap-left { left:0; }
+    .tap-right { right:0; }
+
+    /* ------------------------------------- */
+    /* MODAL (UNCHANGED)                     */
     /* ------------------------------------- */
 
     #modalOverlay {
@@ -158,18 +294,14 @@
       background:var(--ghibli-paper);
       position:absolute;
       bottom:-500px;
-      left:0;
       width:100%;
       border-radius:16px 16px 0 0;
       padding:25px;
-      box-shadow:0px -6px 16px var(--ghibli-shadow);
-      transition:bottom .35s ease-out;
       text-align:center;
+      transition:bottom .35s ease-out;
     }
 
-    #modalOverlay.open #modalCard {
-      bottom:0;
-    }
+    #modalOverlay.open #modalCard { bottom:0; }
 
     #modalImage {
       width:85%;
@@ -178,155 +310,41 @@
       margin-bottom:15px;
       box-shadow:0px 6px 16px var(--ghibli-shadow);
     }
-
-    #modalName {
-      font-size:28px;
-      font-weight:700;
-    }
-
-    #modalIcon {
-      font-size:42px;
-      margin-top:8px;
-    }
-
-    #modalLore {
-      margin-top:15px;
-      font-size:18px;
-      line-height:1.4;
-      opacity:0.85;
-      padding:0 15px;
-    }
-
-    #closeModal {
-      margin-top:20px;
-      background:var(--ghibli-green);
-      color:white;
-      padding:10px 20px;
-      border-radius:12px;
-      cursor:pointer;
-      font-size:18px;
-      display:inline-block;
-    }
-
-    /* ------------------------------------- */
-    /* VOTING CARD                            */
-    /* ------------------------------------- */
-
-    .vote-card {
-      background: var(--ghibli-paper);
-      padding: 25px;
-      border-radius: 18px;
-      box-shadow: 0px 6px 16px var(--ghibli-shadow);
-      margin: 40px auto;
-      text-align: center;
-      max-width: 650px;
-      border: 2px solid #e6dccb;
-    }
-
-    #itemImage {
-      width: 100%;
-      max-width: 560px;
-      border-radius: 14px;
-      margin-bottom: 18px;
-      box-shadow: 0px 4px 10px var(--ghibli-shadow);
-    }
-
-    #itemText {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .arrow-area {
-      display:flex;
-      justify-content:space-between;
-      margin-top:30px;
-    }
-
-    .arrow {
-      font-size:54px;
-      cursor:pointer;
-      padding:14px 28px;
-      border-radius:12px;
-      font-weight:bold;
-      transition:transform .15s ease;
-    }
-
-    .arrow-left {
-      background:var(--ghibli-red);
-      color:white;
-    }
-
-    .arrow-right {
-      background:var(--ghibli-green);
-      color:white;
-    }
-
-    .arrow:hover { transform:scale(1.1); }
-
-    .slide-left { animation:slideLeft .35s forwards; }
-    .slide-right { animation:slideRight .35s forwards; }
-
-    @keyframes slideLeft {
-      from { opacity:1; transform:translateX(0); }
-      to { opacity:0; transform:translateX(-250px); }
-    }
-
-    @keyframes slideRight {
-      from { opacity:1; transform:translateX(0); }
-      to { opacity:0; transform:translateX(250px); }
-    }
-
-    .fade-in { animation:fadeIn .35s ease-out; }
-    @keyframes fadeIn {
-      from { opacity:0; transform:translateY(20px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-
   </style>
 
 <script>
 /* -------------------------------------------------------------- */
-/* FOOD ITEMS + GHIBLI LORE                                       */
+/* FOOD DATA + STATE                                              */
 /* -------------------------------------------------------------- */
 
 const foodLore = {
   "Pizza": "A warm slice beloved across villages and cities alike.",
-  "Sushi": "Delicate flavors crafted in misty harbors by patient artisans.",
-  "Pasta": "A joyful bowl often cooked in cozy kitchens filled with laughter.",
-  "Burrito": "A traveler’s comfort, wrapped to stay warm during long journeys.",
-  "Salad": "Harvested at dawn, kissed by the cool meadow breeze.",
-  "Ice Cream": "A treat enjoyed beneath festival lanterns in summer nights.",
-  "Ramen": "A soulful bowl, best on rainy days in quiet inns.",
-  "Tacos": "Bursting with lively flavors from bustling street markets.",
-  "Pancakes": "Fluffy stacks rumored to be made by early-rising spirits.",
-  "Fries": "Crispy golden bites adored by wandering soot sprites."
+  "Sushi": "Crafted by patient hands in misty harbors.",
+  "Pasta": "A joyful bowl cooked in kitchens full of laughter.",
+  "Burrito": "Wrapped warmth for long wandering journeys.",
+  "Salad": "Fresh as the morning meadow breeze.",
+  "Ice Cream": "A summer delight under glowing lanterns.",
+  "Ramen": "A comforting bowl for quiet rainy days.",
+  "Tacos": "Vibrant flavors from bustling markets.",
+  "Pancakes": "Fluffy stacks loved by early forest spirits.",
+  "Fries": "Crispy bites cherished by soot sprites."
 };
 
 const items = Object.keys(foodLore);
-
-/* -------------------------------------------------------------- */
-/* STATE                                                          */
-/* -------------------------------------------------------------- */
-
 let index = 0;
 let votes = JSON.parse(localStorage.getItem("votes")) || {};
 
-/* Utility: pick correct image */
+/* IMAGE PICKER */
 function foodImage(item) {
   return votes[item] === "yes"
     ? `images/${item}.png`
     : `images/${item}-sad.png`;
 }
 
-/* -------------------------------------------------------------- */
-/* MODAL                                                          */
-/* -------------------------------------------------------------- */
-
+/* MODAL FUNCTIONS */
 function showModal(item) {
   $("#modalImage").attr("src", foodImage(item));
   $("#modalName").text(item);
-  $("#modalIcon").text(votes[item] === "yes" ? "❤️" : "💔");
   $("#modalLore").text(foodLore[item]);
   $("#modalOverlay").addClass("open");
 }
@@ -340,19 +358,16 @@ $(document).on("click", "#modalOverlay", e => {
   if (e.target.id === "modalOverlay") closeModal();
 });
 
-/* -------------------------------------------------------------- */
-/* VOTING                                                         */
-/* -------------------------------------------------------------- */
-
+/* RESET ON HOME */
 $(document).on("pagebeforeshow", "#homePage", () => {
   index = 0;
   votes = {};
   localStorage.setItem("votes", JSON.stringify(votes));
 });
 
+/* SWIPE VOTING (classic Version 2 behavior) */
 function animateAndVote(type) {
   let card = $(".vote-card");
-
   card.addClass(type === "yes" ? "slide-right" : "slide-left");
 
   setTimeout(() => {
@@ -371,7 +386,7 @@ function loadVotePage() {
   const item = items[index];
   $("#itemText").text(item);
   $("#itemImage").attr("src", `images/${item}.png`);
-  $("#counter").text((index+1) + "/10");
+  $("#counter").text((index + 1) + "/10");
 
   $(".vote-card").addClass("fade-in");
   setTimeout(() => $(".vote-card").removeClass("fade-in"), 350);
@@ -384,10 +399,7 @@ function recordVote(type) {
   loadVotePage();
 }
 
-/* -------------------------------------------------------------- */
-/* RESULTS BOOK PAGE                                              */
-/* -------------------------------------------------------------- */
-
+/* RESULTS PAGE BUILDER */
 function displayResults() {
   const liked = $("#likedCol");
   const disliked = $("#dislikedCol");
@@ -400,48 +412,45 @@ function displayResults() {
       <div class="small-item" onclick="showModal('${item}')">
         <img src="${foodImage(item)}">
         <span>${item}</span>
-      </div>
-    `;
-
+      </div>`;
     if (votes[item] === "yes") liked.append(html);
     else disliked.append(html);
   }
 }
 
-/* -------------------------------------------------------------- */
-/* INIT                                                           */
-/* -------------------------------------------------------------- */
-
+/* INIT */
 $(document).on("pagebeforeshow", "#votePage", loadVotePage);
 
-$(document).on("swipeleft", "#votePage", () => animateAndVote("no"));
-$(document).on("swiperight", "#votePage", () => animateAndVote("yes"));
+$(document).on("swipeleft", "#votePage", () => animateAndVote('no'));
+$(document).on("swiperight", "#votePage", () => animateAndVote('yes'));
 
-$(document).keydown(function(e) {
+$(document).keydown(function(e){
   if ($.mobile.activePage.attr("id") !== "votePage") return;
-  if (e.key === "ArrowLeft") animateAndVote("no");
-  if (e.key === "ArrowRight") animateAndVote("yes");
+  if (e.key === "ArrowLeft") animateAndVote('no');
+  if (e.key === "ArrowRight") animateAndVote('yes');
 });
 </script>
 
 </head>
 <body>
 
-<!-- HOME -->
+<!-- HOME PAGE -->
 <div data-role="page" id="homePage">
-  <div data-role="header"><h1>Food Voting</h1></div>
-  <div data-role="content" style="text-align:center; margin-top:40px;">
-    <p>Swipe, click, or use keyboard arrows</p>
-    <a href="#votePage" data-role="button"
-       style="background:var(--ghibli-green); color:white; border:none; font-weight:700; border-radius:12px;">
-      Start
+
+  <div data-role="content">
+    <img src="images/food-vote.png" class="home-image">
+
+    <h1 class="home-title">Food Voting</h1>
+    <p class="home-subtitle">Vote for your favorite food. But beware, they might take it too personally!</p>
+
+    <a href="#votePage" data-role="button" class="magic-btn">
+      Start Your Journey
     </a>
   </div>
 </div>
 
-<!-- VOTE -->
+<!-- VOTE PAGE -->
 <div data-role="page" id="votePage">
-  <div data-role="header"><h1>Vote</h1></div>
 
   <div class="vote-card">
     <h3 id="counter"></h3>
@@ -459,12 +468,10 @@ $(document).keydown(function(e) {
   <div class="tap-zone tap-right" onclick="animateAndVote('yes')"></div>
 </div>
 
-<!-- RESULTS -->
+<!-- RESULTS PAGE -->
 <div data-role="page" id="resultsPage">
-  <div data-role="header"><h1>Results</h1></div>
 
   <div class="book-container">
-
     <div class="page">
       <h2>Foods you liked</h2>
       <div id="likedCol"></div>
@@ -476,25 +483,21 @@ $(document).keydown(function(e) {
       <h2>Foods you disliked</h2>
       <div id="dislikedCol"></div>
     </div>
-
   </div>
 
   <div style="text-align:center; padding:20px;">
-    <a href="#homePage" data-role="button"
-       style="background:var(--ghibli-green); border:none; color:white; font-weight:700; border-radius:12px;">
-       Restart
+    <a href="#homePage" class="magic-btn">
+      Restart Journey
     </a>
   </div>
 </div>
 
-<!-- SLIDE-UP MODAL -->
+<!-- MODAL -->
 <div id="modalOverlay">
   <div id="modalCard">
     <img id="modalImage">
-    <div id="modalName"></div>
-    <div id="modalIcon"></div>
+    <b><div id="modalName"></div></b>
     <p id="modalLore"></p>
-    <div id="closeModal">Close</div>
   </div>
 </div>
 
